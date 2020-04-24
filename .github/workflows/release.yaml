@@ -1,0 +1,43 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release and Upload Release Assets
+
+jobs:
+  build:
+    name: Create Release and Upload Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        id: checkout-code 
+        uses: actions/checkout@v2
+      - name: Build project
+        id: build-project
+        working-directory: ./addons
+        run: |
+          for d in *-*; do
+            tar cvfz $d.tar.gz -C $d .
+          done
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Assets
+        id: upload-release-assets
+        working-directory: ./addons
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: *.tar.gz
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
