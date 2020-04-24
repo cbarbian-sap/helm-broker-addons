@@ -18,7 +18,7 @@ jobs:
         id: build-project
         run: |
           for d in $(find addons -mindepth 1 -maxdepth 1 -type d -exec basename {} \;); do
-            tar cvfz $d.tar.gz -C addons/$d .
+            tar cvfz $d.tgz -C addons/$d .
           done
       - name: Create Release
         id: create-release
@@ -35,7 +35,7 @@ jobs:
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: "*.tar.gz"
+          file: "*.tgz"
           tag: ${{ github.ref }}
           overwrite: true
           file_glob: true
