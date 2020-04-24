@@ -1,0 +1,13 @@
+name: redis
+version: 0.0.1
+id: deb3641e-d5b4-449e-809e-4e6cbc1ba05d
+description: "Redis by Helm Broker."
+displayName: "Redis"
+
+tags: database, cache
+providerDisplayName: bitnami
+longDescription: "Redis by Helm Broker."
+documentationURL: https://github.com/bitnami/charts/tree/master/bitnami/redis
+supportURL: https://bitnami.com/support
+imageURL: https://cdn.auth0.com/blog/logos/redis-icon-logo.png
+bindable: true
