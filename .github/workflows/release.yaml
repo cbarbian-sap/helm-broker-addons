@@ -16,10 +16,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Build project
         id: build-project
-        working-directory: ./addons
         run: |
-          for d in *-*; do
-            tar cvfz $d.tar.gz -C $d .
+          for d in $(find addons -mindepth 1 -maxdepth 1 -type d -exec basename {} \;); do
+            tar cvfz $d.tar.gz -C addons/$d .
           done
       - name: Create Release
         id: create-release
@@ -33,7 +32,6 @@ jobs:
           prerelease: false
       - name: Upload Release Assets
         id: upload-release-assets
-        working-directory: ./addons
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
