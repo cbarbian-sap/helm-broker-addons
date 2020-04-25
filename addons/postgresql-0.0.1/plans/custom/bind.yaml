@@ -1,0 +1,13 @@
+credential:
+  - name: host 
+    value: {{ template "postgresql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: port
+    valueFrom:
+      serviceRef:
+        name: {{ template "postgresql.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
+  - name: password
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "postgresql.fullname" . }}
+        key: postgresql-password

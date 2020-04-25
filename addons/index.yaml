@@ -4,3 +4,7 @@ entries:
     - name: redis
       description: "Redis service"
       version: 0.0.1 
+  postgresql:
+    - name: postgresql
+      description: "PostgreSQL service"
+      version: 0.0.1 

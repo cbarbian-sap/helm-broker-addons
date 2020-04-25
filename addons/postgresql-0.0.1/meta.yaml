@@ -1,0 +1,13 @@
+name: postgresql
+version: 0.0.1
+id: 0a6d4037-2d7a-4bae-8e77-c2a26bf07550
+description: "PostgreSQL by Helm Broker."
+displayName: "PostgreSQL"
+
+tags: database, cache
+providerDisplayName: bitnami
+longDescription: "PostgreSQL by Helm Broker."
+documentationURL: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
+supportURL: https://bitnami.com/support
+imageURL: https://www.postgresql.org/media/img/about/press/elephant.png
+bindable: true
