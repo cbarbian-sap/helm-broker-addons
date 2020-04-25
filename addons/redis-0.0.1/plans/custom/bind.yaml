@@ -1,12 +1,21 @@
 credential:
-  - name: host 
-    value: {{ template "redis.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-  - name: port
+  - name: MASTER_HOST
+    value: {{ template "redis.fullname" . }}-master.{{ .Release.Namespace }}.svc.cluster.local
+  - name: MASTER_PORT
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}
+        name: {{ template "redis.fullname" . }}-master
         jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
-  - name: password
+  {{- if .Values.cluster.enabled }}
+  - name: SLAVE_HOST
+    value: {{ template "redis.fullname" . }}-slave.{{ .Release.Namespace }}.svc.cluster.local
+  - name: SLAVE_PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-slave
+        jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
+  {{- end }}
+  - name: PASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "redis.fullname" . }}
