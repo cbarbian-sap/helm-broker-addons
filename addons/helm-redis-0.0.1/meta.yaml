@@ -1,4 +1,4 @@
-name: redis
+name: helm-redis
 version: 0.0.1
 id: deb3641e-d5b4-449e-809e-4e6cbc1ba05d
 description: "Redis by Helm Broker."

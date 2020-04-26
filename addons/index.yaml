@@ -1,10 +1,10 @@
 apiVersion: v1
 entries:
-  redis:
-    - name: redis
+  helm-redis:
+    - name: helm-redis
       description: "Redis service"
       version: 0.0.1 
-  postgresql:
-    - name: postgresql
+  helm-postgresql:
+    - name: helm-postgresql
       description: "PostgreSQL service"
       version: 0.0.1 
