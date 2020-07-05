@@ -40,9 +40,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Return the appropriate apiVersion for networkpolicy.
 */}}
 {{- define "postgresql.networkPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.4-0, <1.7-0" "9.99-9" -}}
+{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.GitVersion -}}
 "extensions/v1beta1"
-{{- else if semverCompare "^1.7-0" "9.99-9" -}}
+{{- else if semverCompare "^1.7-0" .Capabilities.KubeVersion.GitVersion -}}
 "networking.k8s.io/v1"
 {{- end -}}
 {{- end -}}
@@ -254,6 +254,15 @@ Get the extended configuration ConfigMap name.
 {{- end -}}
 
 {{/*
+Return true if a configmap should be mounted with PostgreSQL configuration
+*/}}
+{{- define "postgresql.mountConfigurationCM" -}}
+{{- if or (.Files.Glob "files/postgresql.conf") (.Files.Glob "files/pg_hba.conf") .Values.postgresqlConfiguration .Values.pgHbaConfiguration .Values.configurationConfigMap }}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Get the initialization scripts ConfigMap name.
 */}}
 {{- define "postgresql.initdbScriptsCM" -}}
@@ -386,7 +395,7 @@ Usage:
 Return the appropriate apiVersion for statefulset.
 */}}
 {{- define "postgresql.statefulset.apiVersion" -}}
-{{- if semverCompare "<1.14-0" "9.99-9" -}}
+{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 {{- print "apps/v1beta2" -}}
 {{- else -}}
 {{- print "apps/v1" -}}
@@ -435,7 +444,7 @@ postgresql: psp.create, rbac.create
 Return the appropriate apiVersion for podsecuritypolicy.
 */}}
 {{- define "podsecuritypolicy.apiVersion" -}}
-{{- if semverCompare "<1.10-0" "9.99-9" -}}
+{{- if semverCompare "<1.10-0" .Capabilities.KubeVersion.GitVersion -}}
 {{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "policy/v1beta1" -}}
