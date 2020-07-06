@@ -1,0 +1,39 @@
+diff -u -r redis-orig/templates/_helpers.tpl redis/templates/_helpers.tpl
+--- redis-orig/templates/_helpers.tpl	2020-07-01 09:55:04.000000000 +0200
++++ redis/templates/_helpers.tpl	2020-07-06 15:02:17.000000000 +0200
+@@ -35,7 +35,7 @@
+ Return the appropriate apiVersion for networkpolicy.
+ */}}
+ {{- define "networkPolicy.apiVersion" -}}
+-{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.GitVersion -}}
++{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.4-0, <1.7-0" -}}
+ {{- print "extensions/v1beta1" -}}
+ {{- else -}}
+ {{- print "networking.k8s.io/v1" -}}
+@@ -46,7 +46,7 @@
+ Return the appropriate apiGroup for PodSecurityPolicy.
+ */}}
+ {{- define "podSecurityPolicy.apiGroup" -}}
+-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
++{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.14-0" -}}
+ {{- print "policy" -}}
+ {{- else -}}
+ {{- print "extensions" -}}
+@@ -57,7 +57,7 @@
+ Return the appropriate apiVersion for PodSecurityPolicy.
+ */}}
+ {{- define "podSecurityPolicy.apiVersion" -}}
+-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
++{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.14-0" -}}
+ {{- print "policy/v1beta1" -}}
+ {{- else -}}
+ {{- print "extensions/v1beta1" -}}
+@@ -400,7 +400,7 @@
+ 
+ {{/* Validate values of Redis - spreadConstrainsts K8s version */}}
+ {{- define "redis.validateValues.spreadConstraints" -}}
+-{{- if and (semverCompare "<1.16-0" .Capabilities.KubeVersion.GitVersion) .Values.slave.spreadConstraints -}}
++{{- if and (default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.16-0") .Values.slave.spreadConstraints -}}
+ redis: spreadConstraints
+     Pod Topology Spread Constraints are only available on K8s  >= 1.16
+     Find more information at https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/

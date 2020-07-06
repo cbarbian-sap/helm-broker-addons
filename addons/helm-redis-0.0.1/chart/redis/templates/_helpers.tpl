@@ -35,7 +35,7 @@ If release name contains chart name it will be used as a full name.
 Return the appropriate apiVersion for networkpolicy.
 */}}
 {{- define "networkPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.4-0, <1.7-0" "9.99-9" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.4-0, <1.7-0" -}}
 {{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "networking.k8s.io/v1" -}}
@@ -46,7 +46,7 @@ Return the appropriate apiVersion for networkpolicy.
 Return the appropriate apiGroup for PodSecurityPolicy.
 */}}
 {{- define "podSecurityPolicy.apiGroup" -}}
-{{- if semverCompare ">=1.14-0" "9.99-9" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.14-0" -}}
 {{- print "policy" -}}
 {{- else -}}
 {{- print "extensions" -}}
@@ -57,7 +57,7 @@ Return the appropriate apiGroup for PodSecurityPolicy.
 Return the appropriate apiVersion for PodSecurityPolicy.
 */}}
 {{- define "podSecurityPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.14-0" "9.99-9" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.14-0" -}}
 {{- print "policy/v1beta1" -}}
 {{- else -}}
 {{- print "extensions/v1beta1" -}}
@@ -153,6 +153,36 @@ Also, we can't use a single if because lazy evaluation is not an option
     {{- end -}}
 {{- else -}}
     {{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Return the path to the cert file.
+*/}}
+{{- define "redis.tlsCert" -}}
+{{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+{{- end -}}
+
+{{/*
+Return the path to the cert key file.
+*/}}
+{{- define "redis.tlsCertKey" -}}
+{{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+{{- end -}}
+
+{{/*
+Return the path to the CA cert file.
+*/}}
+{{- define "redis.tlsCACert" -}}
+{{- required "Certificate CA filename is required when TLS in enabled" .Values.tls.certCAFilename | printf "/opt/bitnami/redis/certs/%s" -}}
+{{- end -}}
+
+{{/*
+Return the path to the DH params file.
+*/}}
+{{- define "redis.tlsDHParams" -}}
+{{- if .Values.tls.dhParamsFilename -}}
+{{- printf "/opt/bitnami/redis/certs/%s" .Values.tls.dhParamsFilename -}}
 {{- end -}}
 {{- end -}}
 
@@ -351,5 +381,28 @@ but Helm 2.9 and 2.10 does not support it, so we need to implement this if-else 
             {{- printf "storageClassName: %s" .Values.slave.persistence.storageClass -}}
         {{- end -}}
     {{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Compile all warnings into a single message, and call fail.
+*/}}
+{{- define "redis.validateValues" -}}
+{{- $messages := list -}}
+{{- $messages := append $messages (include "redis.validateValues.spreadConstraints" .) -}}
+{{- $messages := without $messages "" -}}
+{{- $message := join "\n" $messages -}}
+
+{{- if $message -}}
+{{-   printf "\nVALUES VALIDATION:\n%s" $message | fail -}}
+{{- end -}}
+{{- end -}}
+
+{{/* Validate values of Redis - spreadConstrainsts K8s version */}}
+{{- define "redis.validateValues.spreadConstraints" -}}
+{{- if and (default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.16-0") .Values.slave.spreadConstraints -}}
+redis: spreadConstraints
+    Pod Topology Spread Constraints are only available on K8s  >= 1.16
+    Find more information at https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 {{- end -}}
 {{- end -}}
