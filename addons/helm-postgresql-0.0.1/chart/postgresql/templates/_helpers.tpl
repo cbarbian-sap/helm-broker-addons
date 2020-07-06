@@ -40,9 +40,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Return the appropriate apiVersion for networkpolicy.
 */}}
 {{- define "postgresql.networkPolicy.apiVersion" -}}
-{{- if trimPrefix "v" .Capabilities.KubeVersion.Version | semverCompare ">=1.4-0, <1.7-0" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.4-0, <1.7-0" -}}
 "extensions/v1beta1"
-{{- else if trimPrefix "v" .Capabilities.KubeVersion.Version | semverCompare "^1.7-0" -}}
+{{- else if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "^1.7-0" -}}
 "networking.k8s.io/v1"
 {{- end -}}
 {{- end -}}
@@ -395,7 +395,7 @@ Usage:
 Return the appropriate apiVersion for statefulset.
 */}}
 {{- define "postgresql.statefulset.apiVersion" -}}
-{{- if trimPrefix "v" .Capabilities.KubeVersion.Version | semverCompare "<1.14-0" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.14-0" -}}
 {{- print "apps/v1beta2" -}}
 {{- else -}}
 {{- print "apps/v1" -}}
@@ -444,7 +444,7 @@ postgresql: psp.create, rbac.create
 Return the appropriate apiVersion for podsecuritypolicy.
 */}}
 {{- define "podsecuritypolicy.apiVersion" -}}
-{{- if trimPrefix "v" .Capabilities.KubeVersion.Version | semverCompare "<1.10-0" -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.10-0" -}}
 {{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "policy/v1beta1" -}}
