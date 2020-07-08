@@ -17,3 +17,5 @@ credential:
   - name: DATABASE
     value: {{ .Values.postgresqlDatabase }}
   {{- end }}
+  - name: USE_SSL
+    value: false

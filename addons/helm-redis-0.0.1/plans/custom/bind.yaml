@@ -20,3 +20,5 @@ credential:
       secretKeyRef:
         name: {{ template "redis.fullname" . }}
         key: redis-password
+  - name: USE_SSL
+    value: false
