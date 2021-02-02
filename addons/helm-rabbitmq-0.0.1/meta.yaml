@@ -1,0 +1,12 @@
+name: helm-rabbitmq
+version: 0.0.1
+id: 9c01082f-6a7f-4b17-87c4-f09b78599c99 
+description: "RabbitMQ by Helm Broker."
+displayName: "RabbitMQ"
+
+tags: messagebroker 
+providerDisplayName: bitnami
+longDescription: "RabbitMQ by Helm Broker."
+documentationURL: https://github.com/bitnami/charts/tree/master/bitnami/rabbitmq
+supportURL: https://bitnami.com/support
+bindable: true

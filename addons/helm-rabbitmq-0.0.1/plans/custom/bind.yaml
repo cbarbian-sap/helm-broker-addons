@@ -1,0 +1,15 @@
+credential:
+  - name: HOST
+    value: {{ template "rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: PORT
+    value: {{ .Values.service.port }}
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "rabbitmq.fullname" . }}
+        key: rabbitmq-password
+  - name: ERLANG_COOKIE
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "rabbitmq.fullname" . }}
+        key: rabbitmq-erlang-cookie
