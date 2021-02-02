@@ -7,5 +7,5 @@ Find more information about the PostgreSQL chart in the chart's [documentation](
 
 ## Details
 
-The postgresql addon offers the following plans:
+The PostgreSQL addon offers the following plans:
 - custom

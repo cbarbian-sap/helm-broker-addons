@@ -7,5 +7,5 @@ Find more information about the Redis chart in the chart's [documentation](chart
 
 ## Details
 
-The redis addon offers the following plans:
+The Redis addon offers the following plans:
 - custom
