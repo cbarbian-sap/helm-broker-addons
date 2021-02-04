@@ -3,6 +3,8 @@ credential:
     value: {{ template "rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
   - name: PORT
     value: {{ .Values.service.port }}
+  - name: USERNAME
+    value: {{ .Values.auth.username }}
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
