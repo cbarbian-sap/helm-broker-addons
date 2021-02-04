@@ -8,3 +8,7 @@ entries:
     - name: helm-postgresql
       description: "PostgreSQL service"
       version: 0.0.1 
+  helm-rabbitmq:
+    - name: helm-rabbitmq
+      description: "RabbitMQ service"
+      version: 0.0.1 
